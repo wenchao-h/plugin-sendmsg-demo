@@ -1,0 +1,58 @@
+{
+    "atomCode": "sendmsg",
+    "execution": {
+        "packagePath": "sendmsg-1.0.0.tar.gz",
+        "language": "python",
+        "demands": [
+            "pip install sendmsg-1.0.0.tar.gz"
+        ],
+        "target": "sendmsg"
+    },
+    "input": {
+        "send_to": {
+            "label":"发送目标",
+            "default":"",
+            "placeholder":"用户名",
+            "type":"vuex-input",
+            "desc":"使用分号;分隔多个用户名",
+            "required": true
+        },
+        "send_by": {
+            "label": "消息发送方式",
+            "type": "atom-checkbox-list",
+            "required": true,
+            "list": [
+                {
+                    "id": "weixin",
+                    "name": "企业微信",
+                    "disable": false,
+                    "desc": "消息会发送到企业微信应用号，需先在ESB配置企业微信应用号信息"
+                }, 
+                {
+                    "id": "mail",
+                    "name": "邮件",
+                    "disable": false,
+                    "desc": "发送到邮件"
+                }
+            ]
+        },
+        "title": {
+            "label":"标题",
+            "default":"",
+            "placeholder":"标题",
+            "type":"vuex-input",
+            "desc":"企业微信消息标题或邮件标题",
+            "required": true
+        },
+        "content": {
+            "label": "Content",
+            "default": "",
+            "type": "vuex-textarea",
+            "required": true,
+            "disabled": false,
+            "hidden": false,
+            "isSensitive": false,
+            "desc": "消息内容，可使用变量${VAR}"
+        }
+    }
+}
