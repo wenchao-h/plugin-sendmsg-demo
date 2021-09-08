@@ -74,38 +74,81 @@ def main():
     input_params = sdk.get_input()
 
     # 获取名为input_demo的输入字段值
-    send_to = input_params.get("send_to", None)
-    sdk.log.info("send_to is {}".format(send_to))
+    # 企业微信/邮件配置
+    send_by = []
+    send_to = ""
+    title = ""
+    content = ""
+    send_by_str = input_params.get("send_by", None)
+    if send_by_str:
+        send_by = json.loads(send_by_str)
+        sdk.log.info("send_by is {}".format(send_by))
+        if len(send_by) > 0:
 
-    if not send_to:
-        exit_with_error(error_type=sdk.output_error_type.USER,
-                        error_code=err_code.USER_CONFIG_ERROR,
-                        error_msg="send_to is None")
-    
-    send_by = input_params.get("send_by", None)
-    if not send_by:
-        exit_with_error(error_type=sdk.output_error_type.USER, 
-                        error_code=err_code.USER_CONFIG_ERROR,
-                        error_msg="send_by is None")
-    send_by = json.loads(send_by)
-    sdk.log.info("send_by is {}".format(send_by))
+            send_to = input_params.get("send_to", None)
+            if not send_to:
+                exit_with_error(error_type=sdk.output_error_type.USER, 
+                                error_code=err_code.USER_CONFIG_ERROR,
+                                error_msg="send_to is None")
+            sdk.log.info("send_to is {}".format(send_to))
 
-    title = input_params.get("title", None)
-    if not title:
-        exit_with_error(error_type=sdk.output_error_type.USER, 
-                        error_code=err_code.USER_CONFIG_ERROR,
-                        error_msg="title is None")
+            title = input_params.get("title", None)
+            if not title:
+                exit_with_error(error_type=sdk.output_error_type.USER, 
+                                error_code=err_code.USER_CONFIG_ERROR,
+                                error_msg="title is None")
+            sdk.log.info("title is {}".format(title))
 
-    content = input_params.get("content", None)
-    if not content:
-        exit_with_error(error_type=sdk.output_error_type.USER, 
-                        error_code=err_code.USER_CONFIG_ERROR,
-                        error_msg="content is None")
+            content = input_params.get("content", None)
+            if not content:
+                exit_with_error(error_type=sdk.output_error_type.USER, 
+                                error_code=err_code.USER_CONFIG_ERROR,
+                                error_msg="content is None")
+            sdk.log.info("content is {}".format(content))
+
+    # 企业微信机器人配置
+    send_by_robot_str = input_params.get("send_by_robot", None)
+    sdk.log.info("send_by_robot is {}".format(send_by_robot_str))
+    send_by_robot = False
+    robot_key = ""
+    msgtype = "text"
+    mentioned_list = []
+    robot_content = ""
+    if send_by_robot_str == "true":
+        send_by_robot = True
+
+        robot_key = input_params.get("robot_key", None)
+        if not robot_key:
+            exit_with_error(error_type=sdk.output_error_type.USER, 
+                            error_code=err_code.USER_CONFIG_ERROR,
+                            error_msg="robot_key is None")
+        sdk.log.info("robot_key is {}".format(robot_key))
+        
+        msgtype = input_params.get("msgtype", None)
+        if not msgtype:
+            exit_with_error(error_type=sdk.output_error_type.USER, 
+                            error_code=err_code.USER_CONFIG_ERROR,
+                            error_msg="msgtype is None")
+        sdk.log.info("msgtype is {}".format(msgtype))
+        
+        if msgtype == "text":
+            mentioned = input_params.get("mentioned", None)
+            if mentioned:
+                mentioned_list = mentioned.split(";")
+            sdk.log.info("mentioned_list is {}".format(mentioned_list))
+
+        robot_content = input_params.get("robot_content", None)
+        if not robot_content:
+            exit_with_error(error_type=sdk.output_error_type.USER, 
+                            error_code=err_code.USER_CONFIG_ERROR,
+                            error_msg="robot_content is None")
+        sdk.log.info("robot_content is {}".format(robot_content))
 
     bk_app_code = sdk.get_sensitive_conf("bk_app_code")
     bk_app_secret = sdk.get_sensitive_conf("bk_app_secret")
     bk_host = sdk.get_sensitive_conf("bk_host")
     bk_username = sdk.get_sensitive_conf("bk_username")
+    
     if bk_app_code is None:
         exit_with_error(error_type=sdk.output_error_type.USER, error_code=err_code.USER_CONFIG_ERROR, error_msg="bk_app_code cannot be empty")
     
@@ -134,6 +177,8 @@ def main():
             "body_format": "Text"
         }
 
+    
+    sdk.log.info("send_by is {}".format(send_by))
     if "weixin" in send_by:
         data_tpl["msg_type"] = "weixin"
         data=json.dumps(data_tpl)
@@ -177,7 +222,37 @@ def main():
                             error_msg=resp_json["message"])
             # sdk.log.error("{}".format(resp_json['message']))
     
+    if send_by_robot:
+        robot_webhook = sdk.get_sensitive_conf("robot_webhook")
+        if robot_webhook is None:
+            exit_with_error(error_type=sdk.output_error_type.USER, 
+                            error_code=err_code.USER_CONFIG_ERROR,
+                            error_msg="robot_webhook does not set")
+        body = {
+            "msgtype": "text",
+            "text": {
+                "content": "",
+                "mentioned_list":mentioned_list
+            },
+            "markdown": {
+                "content": ""
+            }
+        }
+        body["msgtype"] = msgtype
+        body[msgtype]["content"] = robot_content
+        sdk.log.info("【robot】 send data is is {}".format(body))
+        webhook_url = robot_webhook + "?key=" + robot_key
+        sdk.log.info("webhook_url is {}".format(webhook_url))
+        
+        resp = requests.post(url=webhook_url, headers=headers, data=json.dumps(body))
+        if resp.status_code != 200:
+            exit_with_error(error_type=sdk.output_error_type.THIRD_PARTY, 
+                            error_code=err_code.THIRD_PARTY,
+                            error_msg=resp.text)
+        resp_json = resp.json()
+        sdk.log.info("【robot】 response data is {}".format(resp_json))
     # 插件执行结果、输出数据
-
+    if not send_by and not send_by_robot :
+        sdk.log.error("用户没有选择任何的发送方式")
     exit_with_succ()
 
