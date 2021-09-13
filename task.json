@@ -56,11 +56,7 @@
                 "expression":[
                     {
                         "key": "send_by",
-                        "value": "weixin"
-                    },
-                    {
-                        "key": "send_by",
-                        "value": "mail"
+                        "value": ["weixin","mail"]
                     }
                 ]
             }
@@ -79,11 +75,7 @@
                 "expression":[
                     {
                         "key": "send_by",
-                        "value": "weixin"
-                    },
-                    {
-                        "key": "send_by",
-                        "value": "mail"
+                        "value": ["weixin","mail"]
                     }
                 ]
             }
