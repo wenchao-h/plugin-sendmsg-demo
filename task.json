@@ -1,12 +1,12 @@
 {
-    "atomCode": "sendmsg",
+    "atomCode": "sendmsgDemo",
     "execution": {
-        "packagePath": "sendmsg-2.0.0.tar.gz",
+        "packagePath": "sendmsgDemo-1.0.0.tar.gz",
         "language": "python",
         "demands": [
-            "pip install sendmsg-2.0.0.tar.gz"
+            "pip install sendmsgDemo-1.0.0.tar.gz"
         ],
-        "target": "sendmsg"
+        "target": "sendmsgDemo"
     },
     "input": {
         "send_by": {
@@ -189,6 +189,12 @@
                     }
                 ]
             }
+        }
+    },
+    "output": {
+        "TEST_OUTPUT":{
+            "type": "string",
+            "description": "测试输出"
         }
     }
 }

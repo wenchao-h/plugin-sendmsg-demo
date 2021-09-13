@@ -23,8 +23,8 @@ def parse_requirements():
 
 if __name__ == "__main__":
     setup(
-        version="2.0.0",
-        name="sendmsg",
+        version="1.0.0",
+        name="sendmsgDemo",
         description="",
 
         cmdclass={},
@@ -32,7 +32,7 @@ if __name__ == "__main__":
         package_data={'': ['*.txt', '*.TXT', '*.JS', 'test/*']},
         install_requires=parse_requirements(),
 
-        entry_points={'console_scripts': ['sendmsg = sendmsg.command_line:main']},
+        entry_points={'console_scripts': ['sendmsgDemo = sendmsgDemo.command_line:main']},
 
         author="vincohuang",
         author_email="vincohuang@tencent.com",

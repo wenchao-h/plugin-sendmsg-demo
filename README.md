@@ -6,12 +6,12 @@
 3. 发送群消息
    
 ## 插件打包
- 1. 进入插件代码工程根目录下
- 2. 执行 python setup.py sdist (或其他打包命令，本示例以sdist为例)
- 3. 在任意位置新建文件夹，如 sendmsg_release
- 4. 将步骤 2 生产的执行包拷贝到 sendmsg_release 下
- 5. 添加task.json文件到 sendmsg_release 下
- 6. 把 sendmsg_release 使用`zip -r sendmsg.zip sendmsg_release`打成zip包即可 
+1. 进入插件代码工程根目录下
+2. 执行 python setup.py sdist (或其他打包命令，本示例以sdist为例)
+3. 在任意位置新建文件夹，如 sendmsgDemo_release
+4. 将步骤 2 生产的执行包拷贝到 sendmsgDemo_release 下
+5. 添加task.json文件到 sendmsgDemo_release 下
+6. 把 sendmsgDemo_release 使用`zip -r sendmsgDemo.zip sendmsgDemo_release`打成zip包即可 
 
 ## 安装插件
 1. 插件名称随便取

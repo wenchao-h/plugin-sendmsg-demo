@@ -254,5 +254,11 @@ def main():
     # 插件执行结果、输出数据
     if not send_by and not send_by_robot :
         sdk.log.error("用户没有选择任何的发送方式")
+    data = {
+        "TEST_OUTPUT":{
+            "type": sdk.output_field_type.STRING,   # 需要task.json设置的类型一致
+            "value": "test"                         # 输出变量的值，需和声明的类型一致
+        }
+    }
     exit_with_succ()
 
